@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"row",
+				"row2"
+			],
+			[
+				"king_",
+				"king_row"
+			],
+			[
+				"kin",
+				"king_coords"
+			],
+			[
 				"for",
 				"format"
 			],
@@ -156,10 +168,6 @@
 				"color_to_play"
 			],
 			[
-				"row",
-				"row1"
-			],
-			[
 				"PIE",
 				"PIECE_ALG"
 			],
@@ -172,18 +180,10 @@
 	"buffers":
 	[
 		{
-			"file": "chess.py",
+			"file": "Todo.txt",
 			"settings":
 			{
-				"buffer_size": 163,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "prof.py",
-			"settings":
-			{
-				"buffer_size": 378,
+				"buffer_size": 392,
 				"line_ending": "Windows"
 			}
 		}
@@ -231,10 +231,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 375.0,
-		"last_filter": "run",
+		"height": 276.0,
+		"last_filter": "che",
 		"selected_items":
 		[
+			[
+				"che",
+				"Build With: Python - Syntax Check"
+			],
 			[
 				"run",
 				"SublimeREPL: Python - RUN current file"
@@ -320,15 +324,16 @@
 	"expanded_folders":
 	[
 		"/C/Users/Lore/mysite/Chess",
-		"/C/Users/Lore/mysite/Chess/chess",
-		"/C/Users/Lore/mysite/Chess/chess/__pycache__"
+		"/C/Users/Lore/mysite/Chess/chess"
 	],
 	"file_history":
 	[
-		"/C/Users/Lore/mysite/Chess/chess/game.py",
 		"/C/Users/Lore/mysite/Chess/chess/position.py",
-		"/C/Users/Lore/mysite/Chess/profile.py",
+		"/C/Users/Lore/mysite/Chess/Todo.txt",
+		"/C/Users/Lore/mysite/Chess/prof.py",
 		"/C/Users/Lore/mysite/Chess/chess.py",
+		"/C/Users/Lore/mysite/Chess/chess/game.py",
+		"/C/Users/Lore/mysite/Chess/profile.py",
 		"/C/Users/Lore/mysite/Chess/negamax.prof",
 		"/C/Users/Lore/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Lore/mysite/Chess/chess/move.py",
@@ -348,7 +353,7 @@
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -362,6 +367,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"is_empty_tile",
+			"= None",
+			"== None",
+			"== NONe",
 			"has_moved",
 			"WARNING",
 			"warning",
@@ -385,57 +394,29 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "chess.py",
+					"file": "Todo.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 163,
+						"buffer_size": 392,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								163,
-								163
+								143,
+								143
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "prof.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 378,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								217,
-								217
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -528,11 +509,11 @@
 	"settings":
 	{
 	},
-	"show_minimap": true,
+	"show_minimap": false,
 	"show_open_files": true,
 	"show_tabs": false,
 	"side_bar_visible": true,
-	"side_bar_width": 177.0,
+	"side_bar_width": 189.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
