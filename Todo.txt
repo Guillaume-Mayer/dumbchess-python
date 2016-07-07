@@ -1,0 +1,8 @@
+- Correction: Unplay needs to restore correctly castle flags
+
+- Optimization: Transposition table should be used to avoid evaluating twice the same position
+- Optimization: Pieces lists [[black king, black other pieces][white king, white other pieces]] to optimize Get_Pseudo_Legal_Moves ?
+
+- Enhancement: Save/load game (Pickle and SQLite)
+- Enhancement: Graphical interface
+- Enhancement: Web interface
