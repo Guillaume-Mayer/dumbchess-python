@@ -3,6 +3,7 @@ from .move import Move
 from .position import Position
 
 import re
+import winsound
 
 HELP = """
 h: Show this help
@@ -11,7 +12,6 @@ m: Show material score
 e: Show evaluation
 g: Show game moves
 c: Let computer choose for me
-u: Undo last move
 q: Quit
 
 NUMBER: Choose move by number in legal moves list
@@ -41,22 +41,26 @@ class Game:
 			s += "\t"
 		return s
 
-	def start(self):
+	def play(self):
 		while 1:
 			# Show current position
 			print(self.position)
 			# Get move
 			if self.opponents[self.position.color_to_play] == HUMAN:
+				if len(self.position.get_legal_moves(self.position.color_to_play)) == 0:
+					print("{} wins !!".format(COLOR_NAMES[1 - self.position.color_to_play]))
+					quit()
 				move = self.get_human_move()
 			else:
 				move = self.get_computer_move()
+				#winsound.Beep(500, 2000)
 				if not move:
 					print("{} wins !!".format(COLOR_NAMES[1 - self.position.color_to_play]))
 					quit()
 			# Print move
 			print("{} move: {}".format(COLOR_NAMES[self.position.color_to_play], move))
 			# Play move
-			self.position += move
+			self.position.play(move)
 			# Store move
 			self.moves.append(move)
 
@@ -67,7 +71,7 @@ class Game:
 				print(HELP)
 			elif s == "l":
 				# Show legal moves
-				legal_moves = self.position.get_legal_moves()
+				legal_moves = self.position.get_legal_moves(self.position.color_to_play)
 				for i, m in enumerate(legal_moves):
 					print(str(i + 1) + ": " + str(m))
 			elif s == "m":
@@ -82,13 +86,6 @@ class Game:
 			elif s == "c":
 				# Let computer choose for me
 				print("Computer's advice: {}".format(self.position.get_best_move()))
-			elif s == "u":
-				# Undo last move
-				if len(self.moves) >= 2:
-					self.position -= self.moves[-1]
-					self.position -= self.moves[-2]
-					self.moves = self.moves[:-2]
-					print(self.position)
 			elif s == "q":
 				# Quit
 				quit()
