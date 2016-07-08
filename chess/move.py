@@ -101,9 +101,6 @@ class Move:
         if self.promote != other.promote: return False
         return True
 
-    def __hash__(self):
-        return hash(str(self.row1) + str(self.col1) + str(self.row2) + str(self.col2) + str(self.promote))
-
     @staticmethod
     def parse(string):
         match = re.match(r"^(?P<piece>[KQRBN])?(?P<startorend>[a-h][1-8])([-x]?(?P<end>[a-h][1-8]))?(?P<prom>[QNRB])?(e\.p\.)?\+?$", string)
@@ -135,8 +132,3 @@ class Move:
             # Instanciate Move
             m = Move(piece, row2, col2, row1, col1, promote = prom)
             return m
-
-
-# Bad Move Exception
-class BadMoveException(Exception):
-    pass
