@@ -53,7 +53,7 @@ class Game:
 				move = self.get_human_move()
 			else:
 				move = self.get_computer_move()
-				#winsound.Beep(500, 2000)
+				winsound.Beep(500, 2000)
 				if not move:
 					print("{} wins !!".format(COLOR_NAMES[1 - self.position.color_to_play]))
 					quit()

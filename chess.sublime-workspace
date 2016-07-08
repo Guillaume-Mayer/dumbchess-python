@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"pr",
+				"prevents_castle_queenside"
+			],
+			[
+				"two",
+				"two_push_col"
+			],
+			[
+				"file",
+				"file_name"
+			],
+			[
+				"is",
+				"is_check"
+			],
+			[
 				"row",
 				"row2"
 			],
@@ -76,10 +92,6 @@
 				"position"
 			],
 			[
-				"is",
-				"is_empty_tile"
-			],
-			[
 				"roo",
 				"rook_a_has_moved"
 			],
@@ -144,10 +156,6 @@
 				"__init__"
 			],
 			[
-				"pr",
-				"promote"
-			],
-			[
 				"en",
 				"en_passant"
 			],
@@ -180,10 +188,18 @@
 	"buffers":
 	[
 		{
-			"file": "Todo.txt",
+			"file": "chess/position.py",
 			"settings":
 			{
-				"buffer_size": 392,
+				"buffer_size": 25761,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "prof.py",
+			"settings":
+			{
+				"buffer_size": 585,
 				"line_ending": "Windows"
 			}
 		}
@@ -231,10 +247,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 276.0,
-		"last_filter": "che",
+		"height": 375.0,
+		"last_filter": "vie",
 		"selected_items":
 		[
+			[
+				"vie",
+				"View: Toggle Status Bar"
+			],
 			[
 				"che",
 				"Build With: Python - Syntax Check"
@@ -288,10 +308,6 @@
 				"Indentation: Convert to Spaces"
 			],
 			[
-				"vie",
-				"View: Toggle Open Files in Side Bar"
-			],
-			[
 				"",
 				"View: Toggle Side Bar"
 			]
@@ -328,15 +344,16 @@
 	],
 	"file_history":
 	[
-		"/C/Users/Lore/mysite/Chess/chess/position.py",
 		"/C/Users/Lore/mysite/Chess/Todo.txt",
 		"/C/Users/Lore/mysite/Chess/prof.py",
-		"/C/Users/Lore/mysite/Chess/chess.py",
 		"/C/Users/Lore/mysite/Chess/chess/game.py",
+		"/C/Users/Lore/mysite/Chess/chess/move.py",
+		"/C/Users/Lore/mysite/Chess/chess/const.py",
+		"/C/Users/Lore/mysite/Chess/chess/position.py",
+		"/C/Users/Lore/mysite/Chess/chess.py",
 		"/C/Users/Lore/mysite/Chess/profile.py",
 		"/C/Users/Lore/mysite/Chess/negamax.prof",
 		"/C/Users/Lore/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
-		"/C/Users/Lore/mysite/Chess/chess/move.py",
 		"/C/Users/Lore/AppData/Roaming/Sublime Text 3/Packages/Alignment/Default (Windows).sublime-keymap",
 		"/C/Users/Lore/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Users/Lore/AppData/Roaming/Sublime Text 3/Packages/SublimeREPL/SublimeREPL.sublime-settings",
@@ -357,9 +374,10 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 92.0,
 		"where_history":
 		[
+			"C:\\Users\\Lore\\mysite\\Chess\\chess"
 		]
 	},
 	"find_state":
@@ -367,6 +385,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"is_capturable",
+			"._legal_moves",
+			"_legal_moves",
+			"fill",
+			"copy",
+			"castling",
+			"from",
 			"is_empty_tile",
 			"= None",
 			"== None",
@@ -399,30 +424,60 @@
 			[
 				{
 					"buffer": 0,
-					"file": "Todo.txt",
+					"file": "chess/position.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 392,
+						"buffer_size": 25761,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								143,
-								143
+								11654,
+								11654
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6878.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "prof.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 585,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								282,
+								282
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -458,7 +513,7 @@
 			1.0
 		]
 	},
-	"menu_visible": true,
+	"menu_visible": false,
 	"output.exec":
 	{
 		"height": 284.0
@@ -470,6 +525,10 @@
 	"output.gotodocumentation":
 	{
 		"height": 229.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 120.0
 	},
 	"pinned_build_system": "",
 	"project": "chess.sublime-project",
@@ -513,8 +572,8 @@
 	"show_open_files": true,
 	"show_tabs": false,
 	"side_bar_visible": true,
-	"side_bar_width": 189.0,
-	"status_bar_visible": true,
+	"side_bar_width": 238.0,
+	"status_bar_visible": false,
 	"template_settings":
 	{
 	}

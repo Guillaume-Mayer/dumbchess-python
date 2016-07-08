@@ -18,18 +18,26 @@ class Move:
         assert not castling or (piece == KING and row1 in (0,7) and row1 == row2 
             and col1 == 4 and col2 in (2, 6) and castling in (KING, QUEEN))
         # Assignments
-        self.piece      = piece
-        self.row2       = row2
-        self.col2       = col2
-        self.row1       = row1
-        self.col1       = col1
-        self.capture    = capture
-        self.check      = check
-        self.promote    = promote
-        self.en_passant = en_passant
-        self.castling   = castling
-        
+        self.piece                     = piece
+        self.row2                      = row2
+        self.col2                      = col2
+        self.row1                      = row1
+        self.col1                      = col1
+        self.capture                   = capture
+        self.check                     = check
+        self.promote                   = promote
+        self.en_passant                = en_passant
+        self.castling                  = castling
+        self.prevents_castle_kingside  = False
+        self.prevents_castle_queenside = False
+        self.two_push_col_was          = -1
+
     def copy(self):
+        """
+        Copy a move
+        Since this is done only when promoting a pawn some attributes are not copied
+        See Position.get_moves_for_pawn
+        """
         copy = Move(
             self.piece,
             self.row2,
@@ -37,15 +45,13 @@ class Move:
             self.row1,
             self.col1,
             self.capture,
-            self.check,
-            self.promote,
-            self.en_passant,
-            self.castling
+            self.check
             )
         return copy
 
     def fill(self, other):
         # Used by Position.resolve_move
+        self.piece      = other.piece
         self.row1       = other.row1
         self.col1       = other.col1
         self.capture    = other.capture

@@ -1,5 +1,7 @@
 import os
+import datetime
 import cProfile
+
 import chess
 
 # Initialize game
@@ -15,9 +17,12 @@ m = chess.move.Move(chess.const.PAWN, 3, 4, 1, 4)
 p.play(m)
 print(p)
 
-#dir(cProfile)
 # Generate profile file
-cProfile.run("p.get_best_move_negamax(4)", "negamax.prof")
+depth     = 4
+now       = datetime.datetime.now()
+file_name = "negamax{}_{:0>4}{:0>2}{:0>2}_{:0>2}{:0>2}{:0>2}.prof".format(depth, now.year, now.month, now.day, now.hour, now.minute, now.second)
+
+cProfile.run("p.get_best_move_negamax({})".format(depth), file_name)
 
 # Open snakeviz
-os.system("snakeviz negamax.prof")
+os.system("snakeviz " + file_name)

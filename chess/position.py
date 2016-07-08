@@ -29,20 +29,15 @@ class Position:
 
     def start(self):
         """Initialize to regular start position"""
-        
-        # White move first
         self.color_to_play = WHITE
-        
         # Castling flags
         self.can_castle_kingside    = [True, True]
         self.can_castle_queenside   = [True, True]
-        
         # Last move two-push pawn move column
         self.two_push_col = -1
-
-        # the position is a list of rows
+        # The position is a list of rows
         # a row is a list of pieces
-        # define first row (white pieces)
+        # Define first row (white pieces)
         row0 = [
             Rook(WHITE),
             Knight(WHITE),
@@ -53,15 +48,15 @@ class Position:
             Knight(WHITE),
             Rook(WHITE),
         ]
-        # define second row (white pawns)
+        # Define second row (white pawns)
         row1 = []
         for c in range(8):
             row1.append(Pawn(WHITE))
-        # define seventh row (black pawns)
+        # Define seventh row (black pawns)
         row6 = []
         for c in range(8):
             row6.append(Pawn(BLACK))
-        # define last row (black pieces)
+        # Define last row (black pieces)
         row7 = [
             Rook(BLACK),
             Knight(BLACK),
@@ -85,20 +80,6 @@ class Position:
         # King position
         self.king_row = [7, 0]
         self.king_col = [4, 4]
-
-    def copy(self):
-        # Return a copy of thh position
-        copy = Position()
-        # Copy flags
-        copy.can_castle_kingside    = [self.can_castle_kingside[0], self.can_castle_kingside[1]] 
-        copy.can_castle_queenside   = [self.can_castle_queenside[0], self.can_castle_queenside[1]]
-        # Copy tiles
-        copy.tiles = []
-        for row in range(8):
-            copy.tiles.append([])
-            for col in range(8):
-                copy.tiles[row].append(self.tiles[row][col])
-        return copy
 
     def __str__(self):
         s = "\n"
@@ -141,27 +122,36 @@ class Position:
             elif move.castling == QUEEN:
                 # Move queen-side rook
                 self.tiles[move.row1][0], self.tiles[move.row1][3] = self.tiles[move.row1][3], self.tiles[move.row1][0]
-        # Update two-push and castling flags
-        self.two_push_col = -1
+        # Special moves stuff
+        if self.two_push_col >= 0:
+            # Store two push col in mmove so this can be restore on unplay
+            move.two_push_col_was = self.two_push_col
+            self.two_push_col = -1
         if move.piece == PAWN:
             if abs(move.row1 - move.row2) == 2:
+                # Means that next move may be "en passant"
                 self.two_push_col = move.col1
         elif move.piece == ROOK:
-            if move.col1 == 0:
+            if move.col1 == 0 and self.can_castle_queenside[self.color_to_play]:
+                # Moving this rook makes queen-side castling impossible
                 self.can_castle_queenside[self.color_to_play] = False
-            elif move.col1 == 7:
+                move.prevents_castle_queenside = True
+            elif move.col1 == 7 and self.can_castle_kingside[self.color_to_play]:
+                # Moving this rook makes king-side castling impossible
                 self.can_castle_kingside[self.color_to_play] = False
+                move.prevents_castle_kingside = True
         elif move.piece == KING:
+            # Keep track of kings positions (see is_check)
             self.king_row[self.color_to_play] = move.row2
             self.king_col[self.color_to_play] = move.col2
             if move.col1 == 4:
-                self.can_castle_kingside[self.color_to_play] = False
-                self.can_castle_queenside[self.color_to_play] = False
-        if move.capture == ROOK:
-            if move.col2 == 0 and move.row2 == (0, 7)[self.color_to_play]:
-                self.can_castle_queenside[1 - self.color_to_play] = False
-            if move.col2 == 7 and move.row2 == (0, 7)[self.color_to_play]:
-                self.can_castle_kingside[1 - self.color_to_play] = False
+                # Moving the king makes castling impossible both sides
+                if self.can_castle_kingside[self.color_to_play]:
+                    self.can_castle_kingside[self.color_to_play] = False
+                    move.prevents_castle_kingside = True
+                if self.can_castle_queenside[self.color_to_play]:
+                    self.can_castle_queenside[self.color_to_play] = False
+                    move.prevents_castle_queenside = True
         # Swap color to play 
         self.color_to_play = (1 - self.color_to_play)
 
@@ -194,13 +184,19 @@ class Position:
             elif move.castling == QUEEN:
                 # Move queen-side rook
                 self.tiles[move.row1][0], self.tiles[move.row1][3] = self.tiles[move.row1][3], self.tiles[move.row1][0]
-        # Update two-push and castling flags
-        if move.piece == KING:
-            self.king_row[1 - self.color_to_play] = move.row1
-            self.king_col[1 - self.color_to_play] = move.col1
-        # WARNING
         # Swap color to play 
         self.color_to_play = (1 - self.color_to_play)
+        # Special moves stuff
+        self.two_push_col = move.two_push_col_was
+        if move.prevents_castle_queenside:
+            assert not self.can_castle_queenside[self.color_to_play]
+            self.can_castle_queenside[self.color_to_play] = True
+        if move.prevents_castle_kingside:
+            assert not self.can_castle_kingside[self.color_to_play]
+            self.can_castle_kingside[self.color_to_play] = True
+        if move.piece == KING:
+            self.king_row[self.color_to_play] = move.row1
+            self.king_col[self.color_to_play] = move.col1          
 
     def resolve_move(self, move):
         # If row1 and col1 are filled move is considered resolved
@@ -240,11 +236,10 @@ class Position:
         legal_moves = []
         for m in moves:
             self.play(m)
-            if not self.is_check(color):
-                legal_moves.append(m)
+            if not self.is_check(color): legal_moves.append(m)
             self.unplay(m)
         return legal_moves
-
+        
     def get_pseudo_legal_moves(self, color):
         # Get possible moves from each tile without considering check situation
         moves = []
@@ -290,19 +285,19 @@ class Position:
         if self.can_castle_kingside[color]:
             # King-side castling
             if self.tiles[row][5] is None and self.tiles[row][6] is None:
-                if (not self.is_tile_attacked(row, 5, color) and not self.is_tile_attacked(row, 6, color)):
-                    moves.append(Move(KING, row, 6, row, 4, castling = KING))
+                if self.tiles[row][7] is not None and self.tiles[row][7].piece == ROOK and self.tiles[row][7].color == color:
+                    if (not self.is_tile_attacked(row, 5, color) and not self.is_tile_attacked(row, 6, color)):
+                        moves.append(Move(KING, row, 6, row, 4, castling = KING))
         if self.can_castle_queenside[color]:
             # Queen-side castling
             if self.tiles[row][3] is None and self.tiles[row][2] is None and self.tiles[row][1] is None:
-                if (not self.is_tile_attacked(row, 3, color) and not self.is_tile_attacked(row, 2, color)):
-                    moves.append(Move(KING, row, 2, row, 4, castling = QUEEN))
+                if self.tiles[row][0] is not None and self.tiles[row][0].piece == ROOK and self.tiles[row][0].color == color:
+                    if (not self.is_tile_attacked(row, 3, color) and not self.is_tile_attacked(row, 2, color)):
+                        moves.append(Move(KING, row, 2, row, 4, castling = QUEEN))
         return moves
 
     def get_moves_for_queen(self, row, col, color):
-        moves = self.get_moves_for_rook(row, col, color, QUEEN)
-        moves += self.get_moves_for_bishop(row, col, color, QUEEN)
-        return moves
+        return self.get_moves_for_rook(row, col, color, QUEEN) + self.get_moves_for_bishop(row, col, color, QUEEN)
 
     def get_moves_for_rook(self, row, col, color, piece = ROOK):
         moves = []
@@ -463,6 +458,12 @@ class Position:
         self._capture = piece.piece
         return True
 
+    # Optimized version for is_tile_attacked
+    def is_capturable_tile_o(self, row, col, color):
+        if self.tiles[row][col].color == color: return False
+        self._capture = self.tiles[row][col].piece
+        return True
+        
     def is_tile_attacked(self, row, col, color):
         # Check bishop style attacks (including bishop, pawn, king and queen)
         # - On top-right
@@ -470,7 +471,7 @@ class Position:
         while r < 8 and c < 8:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -488,7 +489,7 @@ class Position:
         while r < 8 and c >= 0:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -506,7 +507,7 @@ class Position:
         while r >= 0 and c >= 0:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -524,7 +525,7 @@ class Position:
         while r >= 0 and c < 8:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -542,7 +543,7 @@ class Position:
         for c in range(col - 1, -1, -1):
             if self.tiles[row][c] is None:
                 pass
-            elif self.is_capturable_tile(row, c, color):
+            elif self.is_capturable_tile_o(row, c, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -556,7 +557,7 @@ class Position:
         for c in range(col + 1, 8):
             if self.tiles[row][c] is None:
                 pass
-            elif self.is_capturable_tile(row, c, color):
+            elif self.is_capturable_tile_o(row, c, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -570,7 +571,7 @@ class Position:
         for r in range(row + 1, 8):
             if self.tiles[r][col] is None:
                 pass
-            elif self.is_capturable_tile(r, col, color):
+            elif self.is_capturable_tile_o(r, col, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -584,7 +585,7 @@ class Position:
         for r in range(row - 1, -1, -1):
             if self.tiles[r][col] is None:
                 pass
-            elif self.is_capturable_tile(r, col, color):
+            elif self.is_capturable_tile_o(r, col, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -621,13 +622,16 @@ class Position:
         coef_m = Coef for material score (material value)
         """
         mobility = len(self.get_legal_moves(self.color_to_play))
+        # Mate situations
         if mobility == 0:
-            # Mate situation
-            return -MATE
-        # Swap temporarly color to play to get adversary mobility
-        temp, self.color_to_play = self.color_to_play, (1 - self.color_to_play)
+            if self.is_check(self.color_to_play):
+                return -MATE
+            else:
+                return DRAW
+        # Get adversary mobility by temporarily swapping color
+        temp = self.color_to_play
+        self.color_to_play = 1 - temp
         mobility -= len(self.get_legal_moves(self.color_to_play))
-        # Restore color to play
         self.color_to_play = temp
         # Evaluate position according to coefs
         return (mobility * coef_t) + (self.get_material_value() * coef_m)

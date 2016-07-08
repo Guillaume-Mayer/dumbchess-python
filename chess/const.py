@@ -26,6 +26,7 @@ COLOR_NAMES	= "Black", "White"
 HUMAN		= 0
 COMPUTER	= 1
 
-# Algorith constant
+# Evaluation constants
 MATE		= 999999999
 INFINITY	= (MATE + 1)
+DRAW		= 0
