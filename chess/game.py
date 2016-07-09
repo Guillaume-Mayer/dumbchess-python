@@ -91,7 +91,7 @@ class Game:
 				quit()
 			elif re.match(r"^[1-9][0-9]*$", s):
 				# Choose move by number in possible moves list
-				legal_moves = self.position.get_legal_moves()
+				legal_moves = self.position.get_legal_moves(self.position.color_to_play)
 				if int(s) in range(1, len(legal_moves) + 1):
 					return legal_moves[int(s) - 1]
 			else:

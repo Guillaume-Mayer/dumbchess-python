@@ -7,8 +7,11 @@ class Piece:
 		self.color = color
 		self.piece = piece
 
-	def __str__(self):
-		return COLOR_NAMES[self.color] + " " + PIECE_NAMES[self.piece]
+	def __eq__(self, other):
+		return isinstance(other, Piece) and self.piece == other.piece and self.color == other.color
+
+	def __hash__(self):
+		return self.piece << 1 | self.color
 
 	def short_str(self):
 		s = PIECE_SHORT[self.piece]

@@ -6,9 +6,6 @@ BISHOP	= 3
 KNIGHT	= 4
 PAWN	= 5
 
-# Piece names
-PIECE_NAMES	= "King", "Queen", "Rook", "Bishop", "Knight", "Pawn"
-
 # Piece char for ascii representation
 PIECE_SHORT	= "K", "Q", "R", "B", "N", "P"
 

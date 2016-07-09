@@ -91,10 +91,24 @@ class Position:
                     s += self.tiles[row][col].short_str()
             s += "\n"
         s += "\n" + COLOR_NAMES[self.color_to_play] + " to play"
-        if self.is_check(self.color_to_play):
-            s += " (Check!)"
+        #if self.is_check(self.color_to_play):
+        #    s += " (Check!)"
         s += "\n"
         return s
+
+    def __eq__(self, other):
+        if self.tiles != other.tiles: return False
+        if self.color_to_play != other.color_to_play: return False
+        if self.can_castle_queenside != other.can_castle_queenside: return False
+        if self.can_castle_kingside != other.can_castle_kingside: return False
+        if self.two_push_col != other.two_push_col: return False
+        return True
+
+    def key(self):
+        # WARNING
+        tup = (self.color_to_play, tuple(self.can_castle_queenside), tuple(self.can_castle_kingside), self.two_push_col)
+        tup += tuple(tuple(row) for row in self.tiles)
+        return tup
 
     def play(self, move):
         """
@@ -239,7 +253,7 @@ class Position:
             if not self.is_check(color): legal_moves.append(m)
             self.unplay(m)
         return legal_moves
-        
+    
     def get_pseudo_legal_moves(self, color):
         # Get possible moves from each tile without considering check situation
         moves = []
