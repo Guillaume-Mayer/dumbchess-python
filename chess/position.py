@@ -105,7 +105,8 @@ class Position:
         return True
 
     def key(self):
-        # WARNING
+        # Not used
+        # This tuple could serve as a dictionnary key
         tup = (self.color_to_play, tuple(self.can_castle_queenside), tuple(self.can_castle_kingside), self.two_push_col)
         tup += tuple(tuple(row) for row in self.tiles)
         return tup
