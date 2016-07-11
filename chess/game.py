@@ -12,6 +12,7 @@ m: Show material score
 e: Show evaluation
 g: Show game moves
 c: Let computer choose for me
+u: Undo last move
 q: Quit
 
 NUMBER: Choose move by number in legal moves list
@@ -66,7 +67,7 @@ class Game:
 
 	def get_human_move(self):
 		while 1:
-			s = input("Your move: ")
+			s = input("{} move: ".format(COLOR_NAMES[self.position.color_to_play]))
 			if s == "h":
 				print(HELP)
 			elif s == "l":
@@ -86,6 +87,13 @@ class Game:
 			elif s == "c":
 				# Let computer choose for me
 				print("Computer's advice: {}".format(self.position.get_best_move()))
+			elif s == "u":
+				# Undo the last move
+				self.position.unplay(self.moves.pop(-1))
+				# Undo the computer move if it played
+				if self.opponents[self.position.color_to_play] == COMPUTER:
+					self.position.unplay(self.moves.pop(-1))
+				print(self.position)
 			elif s == "q":
 				# Quit
 				quit()
