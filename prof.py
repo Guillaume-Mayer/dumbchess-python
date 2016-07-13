@@ -18,9 +18,12 @@ p.play(m)
 print(p)
 
 # Generate profile file
-depth     = 5
+depth     = 4
 now       = datetime.datetime.now()
 file_name = "negamax{}_{:0>4}{:0>2}{:0>2}_{:0>2}{:0>2}{:0>2}.prof".format(depth, now.year, now.month, now.day, now.hour, now.minute, now.second)
+
+for d in range(1, depth):
+	p.get_best_move_negamax(d)
 
 cProfile.run("p.get_best_move_negamax({})".format(depth), file_name)
 

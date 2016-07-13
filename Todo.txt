@@ -5,6 +5,7 @@
 - Optimization: Use 10x10 board for faster outside moves detection (knights and king) ?
 - Optimization: Order moves so best moves come first ?
 - Optimization: Positional bonus ?
+- Optimization: Openings library
 
 - Enhancement: Save/load game (Pickle and SQLite)
 - Enhancement: Graphical interface

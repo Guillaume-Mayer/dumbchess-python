@@ -2,28 +2,6 @@ from .const import *
 from .piece import *
 from .move import *
 
-KING_MOVES = (
-    (-1, -1),
-    (-1,  0),
-    (-1, +1),
-    ( 0, -1),
-    ( 0, +1),
-    (+1, -1),
-    (+1,  0),
-    (+1, +1)
-)
-
-KNIGHT_MOVES = (
-    (-2, -1),
-    (-2, +1),
-    (-1, -2),
-    (-1, +2),
-    (+1, -2),
-    (+1, +2),
-    (+2, -1),
-    (+2, +1)
-)
-
 # Position class
 class Position:
 
@@ -128,6 +106,7 @@ class Position:
                 self.tiles[3][move.col2] = None
         # Promotion
         elif move.promote:
+            assert move.piece == PAWN
             self.tiles[move.row2][move.col2] = self.tiles[move.row2][move.col2].promote(move.promote)
         # Castling
         elif move.castling is not None:
@@ -324,7 +303,7 @@ class Position:
         for c in range(col - 1, -1, -1):
             if self.tiles[row][c] is None:
                 moves.append(Move(piece, row, c, row, col))
-            elif self.is_capturable_tile(row, c, color):
+            elif self.is_capturable_tile_o(row, c, color):
                 moves.append(Move(piece, row, c, row, col, self._capture))
                 break
             else:
@@ -333,7 +312,7 @@ class Position:
         for c in range(col + 1, 8, +1):
             if self.tiles[row][c] is None:
                 moves.append(Move(piece, row, c, row, col))
-            elif self.is_capturable_tile(row, c, color):
+            elif self.is_capturable_tile_o(row, c, color):
                 moves.append(Move(piece, row, c, row, col, self._capture))
                 break
             else:
@@ -342,7 +321,7 @@ class Position:
         for r in range(row + 1, 8, +1):
             if self.tiles[r][col] is None:
                 moves.append(Move(piece, r, col, row, col))
-            elif self.is_capturable_tile(r, col, color):
+            elif self.is_capturable_tile_o(r, col, color):
                 moves.append(Move(piece, r, col, row, col, self._capture))
                 break
             else:
@@ -351,7 +330,7 @@ class Position:
         for r in range(row - 1, -1, -1):
             if self.tiles[r][col] is None:
                 moves.append(Move(piece, r, col, row, col))
-            elif self.is_capturable_tile(r, col, color):
+            elif self.is_capturable_tile_o(r, col, color):
                 moves.append(Move(piece, r, col, row, col, self._capture))
                 break
             else:
@@ -365,7 +344,7 @@ class Position:
         while r < 8 and c < 8:
             if self.tiles[r][c] is None:
                 moves.append(Move(piece, r, c, row, col))
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 moves.append(Move(piece, r, c, row, col, self._capture))
                 break
             else:
@@ -376,7 +355,7 @@ class Position:
         while r < 8 and c >= 0:
             if self.tiles[r][c] is None:
                 moves.append(Move(piece, r, c, row, col))
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 moves.append(Move(piece, r, c, row, col, self._capture))
                 break
             else:
@@ -387,7 +366,7 @@ class Position:
         while r >= 0 and c >= 0:
             if self.tiles[r][c] is None:
                 moves.append(Move(piece, r, c, row, col))
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 moves.append(Move(piece, r, c, row, col, self._capture))
                 break
             else:
@@ -398,7 +377,7 @@ class Position:
         while r >= 0 and c < 8:
             if self.tiles[r][c] is None:
                 moves.append(Move(piece, r, c, row, col))
-            elif self.is_capturable_tile(r, c, color):
+            elif self.is_capturable_tile_o(r, c, color):
                 moves.append(Move(piece, r, c, row, col, self._capture))
                 break
             else:
@@ -434,17 +413,19 @@ class Position:
             if init_row and self.tiles[row + 2*sens][col] is None:
                 moves.append(Move(PAWN, row + 2*sens, col, row, col))
         # Capture on left
-        if self.is_capturable_tile(row + sens, col - 1, color):
-            moves.append(Move(PAWN, row + sens, col - 1, row, col, self._capture))
-        elif ep_row and col > 0 and self.two_push_col[1 - color] == col - 1:
-            # Capture en passant
-            moves.append(Move(PAWN, row + sens, col - 1, row, col, PAWN, en_passant = True))
+        if col > 0:
+            if self.is_capturable_tile_o(row + sens, col - 1, color):
+                moves.append(Move(PAWN, row + sens, col - 1, row, col, self._capture))
+            elif ep_row and self.two_push_col[1 - color] == col - 1:
+                # Capture en passant
+                moves.append(Move(PAWN, row + sens, col - 1, row, col, PAWN, en_passant = True))
         # Capture on right
-        if self.is_capturable_tile(row + sens, col + 1, color):
-            moves.append(Move(PAWN, row + sens, col + 1, row, col, self._capture))
-        elif ep_row and col < 7 and self.two_push_col[1 - color] == col + 1:
-            # Capture en passant
-            moves.append(Move(PAWN, row + sens, col + 1, row, col, PAWN, en_passant = True))
+        if col < 7:
+            if self.is_capturable_tile_o(row + sens, col + 1, color):
+                moves.append(Move(PAWN, row + sens, col + 1, row, col, self._capture))
+            elif ep_row and self.two_push_col[1 - color] == col + 1:
+                # Capture en passant
+                moves.append(Move(PAWN, row + sens, col + 1, row, col, PAWN, en_passant = True))
         # Promotion
         if prom_row and moves: 
             promotions = (QUEEN, KNIGHT, ROOK, BISHOP)
@@ -477,8 +458,18 @@ class Position:
         self._capture = piece.piece
         return True
 
-    # Optimized version for is_tile_attacked
+    # Optimized version
     def is_capturable_tile_o(self, row, col, color):
+        piece = self.tiles[row][col]
+        if piece is None: return False
+        if piece.color == color: return False
+        if piece.piece == KING: return False
+        # Store the captured piece to store in move
+        self._capture = piece.piece
+        return True
+
+    # Optimized version for is_tile_attacked
+    def is_attackable_tile(self, row, col, color):
         if self.tiles[row][col].color == color: return False
         self._capture = self.tiles[row][col].piece
         return True
@@ -490,7 +481,7 @@ class Position:
         while r < 8 and c < 8:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile_o(r, c, color):
+            elif self.is_attackable_tile(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -508,7 +499,7 @@ class Position:
         while r < 8 and c >= 0:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile_o(r, c, color):
+            elif self.is_attackable_tile(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -526,7 +517,7 @@ class Position:
         while r >= 0 and c >= 0:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile_o(r, c, color):
+            elif self.is_attackable_tile(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -544,7 +535,7 @@ class Position:
         while r >= 0 and c < 8:
             if self.tiles[r][c] is None:
                 pass
-            elif self.is_capturable_tile_o(r, c, color):
+            elif self.is_attackable_tile(r, c, color):
                 if self._capture == BISHOP:
                     return True
                 elif self._capture == PAWN:
@@ -562,7 +553,7 @@ class Position:
         for c in range(col - 1, -1, -1):
             if self.tiles[row][c] is None:
                 pass
-            elif self.is_capturable_tile_o(row, c, color):
+            elif self.is_attackable_tile(row, c, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -576,7 +567,7 @@ class Position:
         for c in range(col + 1, 8):
             if self.tiles[row][c] is None:
                 pass
-            elif self.is_capturable_tile_o(row, c, color):
+            elif self.is_attackable_tile(row, c, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -590,7 +581,7 @@ class Position:
         for r in range(row + 1, 8):
             if self.tiles[r][col] is None:
                 pass
-            elif self.is_capturable_tile_o(r, col, color):
+            elif self.is_attackable_tile(r, col, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -604,7 +595,7 @@ class Position:
         for r in range(row - 1, -1, -1):
             if self.tiles[r][col] is None:
                 pass
-            elif self.is_capturable_tile_o(r, col, color):
+            elif self.is_attackable_tile(r, col, color):
                 if self._capture == ROOK:
                     return True
                 elif self._capture == KING:
@@ -635,7 +626,7 @@ class Position:
                     material[self.tiles[row][col].color] += self.tiles[row][col].get_material_value()
         return material[self.color_to_play] - material[1 - self.color_to_play]
 
-    def eval(self, coef_t = 1, coef_m = 2):
+    def eval(self, coef_t = 2, coef_m = 3):
         """
         coef_t = Coef for tactical score (mobility)
         coef_m = Coef for material score (material value)
