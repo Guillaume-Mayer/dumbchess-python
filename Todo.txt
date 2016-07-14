@@ -3,9 +3,9 @@
 - Optimization: Transposition table to avoid evaluating twice the same position ?
 - Optimization: Pieces lists [[black king, black other pieces][white king, white other pieces]] to optimize Get_Pseudo_Legal_Moves ?
 - Optimization: Use 10x10 board for faster outside moves detection (knights and king) ?
-- Optimization: Order moves so best moves come first ?
 - Optimization: Positional bonus ?
 - Optimization: Openings library
+- Optimization: Iterative deepening (order the moves with the results of n-1)
 
 - Enhancement: Save/load game (Pickle and SQLite)
 - Enhancement: Graphical interface
