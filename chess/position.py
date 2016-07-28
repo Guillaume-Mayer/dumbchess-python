@@ -407,21 +407,21 @@ class Position:
             ep_row = (row == 3)
         moves = []
         # Move one tile
-        if self.tiles[row + sens][col] is None:
+        if self.is_empty_tile(row + sens, col):
             moves.append(Move(PAWN, row + sens, col, row, col))
             # Move two tiles
             if init_row and self.tiles[row + 2*sens][col] is None:
                 moves.append(Move(PAWN, row + 2*sens, col, row, col))
         # Capture on left
         if col > 0:
-            if self.is_capturable_tile_o(row + sens, col - 1, color):
+            if self.is_capturable_tile(row + sens, col - 1, color):
                 moves.append(Move(PAWN, row + sens, col - 1, row, col, self._capture))
             elif ep_row and self.two_push_col[1 - color] == col - 1:
                 # Capture en passant
                 moves.append(Move(PAWN, row + sens, col - 1, row, col, PAWN, en_passant = True))
         # Capture on right
         if col < 7:
-            if self.is_capturable_tile_o(row + sens, col + 1, color):
+            if self.is_capturable_tile(row + sens, col + 1, color):
                 moves.append(Move(PAWN, row + sens, col + 1, row, col, self._capture))
             elif ep_row and self.two_push_col[1 - color] == col + 1:
                 # Capture en passant
