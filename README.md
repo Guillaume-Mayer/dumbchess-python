@@ -9,11 +9,13 @@ It's a console chess game with AI.
 * That results in some stupid moves
 * That is why I called it **DumbChess**
 
-I think Python was not the best choice to write such a game, but I learned and that was the point.
+I now think Python was not the best choice to write such a game, but I learned and that was the point.
 
 To run it :
 
     python chess.py
+
+Then type your first move or "h" for help.
 
 The argument in `chess.position.get_best_move` sets the thinking depth.
 
