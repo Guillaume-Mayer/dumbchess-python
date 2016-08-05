@@ -646,7 +646,7 @@ class Position:
         return (mobility * coef_t) + (self.get_material_value() * coef_m)
         
     def get_best_move(self):
-        return self.get_best_move_negamax(4)
+        return self.get_best_move_negamax(3)
         
     def get_best_move_negamax(self, depth):
         score, move = self.negamax(depth, -INFINITY, +INFINITY)
