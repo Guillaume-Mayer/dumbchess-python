@@ -122,6 +122,8 @@ class Position:
             # Store two push col in mmove so this can be restore on unplay
             move.two_push_col_was = self.two_push_col[color]
             self.two_push_col[color] = -1
+        # Always reset bad side two-push
+        self.two_push_col[1 - color] = -1
         if move.piece == PAWN:
             if abs(move.row1 - move.row2) == 2:
                 # Means that next move may be "en passant"
